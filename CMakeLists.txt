@@ -1,16 +1,22 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VESRION 2025.2.${PATCH_VERSION})
 
 project(lab2 VERSION ${PROJECT_VESRION})
 
-add_executable(ip_filter ip_filter.cpp)
+file(GLOB SOURCES "src/*.cpp")
+add_executable(ip_filter ${SOURCES})
+target_include_directories(ip_filter PRIVATE 
+    ${CMAKE_SOURCE_DIR}/include)
 
 set_target_properties(ip_filter PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
 )
+
+find_package(Boost 1.74 REQUIRED COMPONENTS unit_test_framework)
+
 
 if (MSVC)
     target_compile_options(ip_filter PRIVATE
@@ -39,4 +45,4 @@ set(CPACK_PACKAGE_DESCRIPTION "Simple program to filter ip's")
 
 include(CPack)
 
-
+add_subdirectory(tests)
