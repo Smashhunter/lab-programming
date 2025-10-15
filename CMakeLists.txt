@@ -6,16 +6,16 @@ set(PROJECT_VESRION 2025.3.${PATCH_VERSION})
 project(lab3 VERSION ${PROJECT_VESRION})
 
 #creating lib for our project
-file(GLOB LIB_SOURCES "src/lib/*.cpp")
-add_library(my_lib STATIC ${LIB_SOURCES})
-target_include_directories(my_lib PUBLIC 
-    ${CMAKE_SOURCE_DIR}/include)
+# file(GLOB LIB_SOURCES "src/lib/*.cpp")
+# add_library(my_lib STATIC ${LIB_SOURCES})
+# target_include_directories(my_lib PUBLIC 
+#     ${CMAKE_SOURCE_DIR}/include)
 
 #configuring main to use our lib
 add_executable(main "src/main/main.cpp")
 target_include_directories(main PRIVATE 
     ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(main PRIVATE my_lib)
+# target_link_libraries(main PRIVATE my_lib)
 
 set_target_properties(main PROPERTIES
     CXX_STANDARD 14
