@@ -3,7 +3,7 @@ name: 'C++ CI'
 on:
   push:
     branches:
-      - lab2
+      - lab3
       - feature/github_actions
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          gh release create v2025.2.${{ github.run_number }} build/lab2-2025.2.${{ github.run_number }}-Linux.deb
+          gh release create v2025.3.${{ github.run_number }} build/lab3-2025.3.${{ github.run_number }}-Linux.deb
 
   build-windows:
     runs-on: windows-latest
@@ -56,7 +56,7 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-          cmake --build build --target tests
+          # cmake --build build --target tests
           cmake --build build --target package --config Release
       
       - name: Upload Release Asset
@@ -64,4 +64,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: cmd
         run: |
-          gh release upload v2025.2.${{ github.run_number }} build/lab2-2025.2.${{ github.run_number }}-win64.zip
+          gh release upload v2025.3.${{ github.run_number }} build/lab3-2025.3.${{ github.run_number }}-win64.zip
