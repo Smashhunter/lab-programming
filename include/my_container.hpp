@@ -9,17 +9,26 @@ class my_container
 public:
     struct iterator{
         // Random, Directional, Bidirectional
-        virtual T& operator*() = 0;
-        virtual T& get() = 0;
+        using difference_type   = std::ptrdiff_t;
+        using value_type        = T;
+        using pointer           = T*;
+        using reference         = T&;
+
+
+        virtual reference operator*() const = 0;
+        virtual pointer operator->() const = 0;
+        virtual pointer ptr() const = 0;
     };
-    my_container() = default;
-    my_container(const my_container& other)= 0;
-    my_container(my_container&& other) = 0;
-    my_container(std::initializer_list<T> init,
-        const Allocator& alloc = Allocator() ) = 0;
-    ~my_container() = default;
-    virtual my_container& operator =(const my_container& other) = 0;
-    virtual my_container& operator =(const my_container&& other) = 0;
+    
+    // Description of functions needs to be made:
+    // my_container();
+    // my_container(const my_container& other)= 0;
+    // my_container(my_container&& other) = 0;
+    // my_container(std::initializer_list<T> init,
+    //     const Allocator& alloc = Allocator() ) = 0;
+    
+    // virtual my_container& operator =(const my_container& other) = 0;
+    // virtual my_container& operator =(const my_container&& other) = 0;
     virtual void push_back(const T& value) = 0;
     virtual void push_back(const T&& value) = 0;
     virtual void print() = 0;
