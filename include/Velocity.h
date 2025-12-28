@@ -1,11 +1,13 @@
 #pragma once
 #include "Point.h"
 #include <cmath>
+#include <iostream>
 
 class Velocity {
   public:
     inline Velocity() = default;
 
+    // TODO: комментарии
     inline Velocity(double abs, double angle) {
         const double x = std::cos(angle);
         const double y = std::sin(angle);
@@ -27,3 +29,11 @@ class Velocity {
   private:
     Point vec;
 };
+inline std::istream& operator>>(std::istream& stream, Velocity& variable) 
+{
+    double vx{};
+    double vy{};
+    stream >> vx >> vy;
+    variable = Point(vx, vy);
+    return stream;
+}

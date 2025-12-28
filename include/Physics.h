@@ -1,26 +1,22 @@
 #pragma once
 #include "Ball.hpp"
-#include "Dust.hpp"
 #include <vector>
 
 class Physics {
   public:
     Physics(double timePerTick = 0.001);
     void setWorldBox(const Point& topLeft, const Point& bottomRight);
-    void update(std::vector<Ball>& balls, std::vector<Dust>& dusts, size_t ticks) const;
+    void update(std::vector<Ball>& balls, size_t ticks) const;
 
   private:
-    void collideBalls(std::vector<Ball>& balls, std::vector<Dust>& dusts) const;
+    void collideBalls(std::vector<Ball>& balls) const;
     void collideWithBox(std::vector<Ball>& balls) const;
     void move(std::vector<Ball>& balls) const;
-    void move(std::vector<Dust>& dusts) const;
-    Point processCollision(Ball& a, Ball& b,
+    void processCollision(Ball& a, Ball& b,
                           double distanceBetweenCenters2) const;
-    void updateDustLife(std::vector<Dust>& dusts) const;
 
   private:
     Point topLeft;
     Point bottomRight;
     double timePerTick;
-    size_t dustMaxLifetime_ = 1000;
 };

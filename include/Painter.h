@@ -1,7 +1,6 @@
 #pragma once
 #include "Color.h"
 #include "Point.h"
-#include <fstream>
 #include <memory>
 
 class View;

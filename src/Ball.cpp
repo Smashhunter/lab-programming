@@ -1,41 +1,21 @@
 #include "Ball.hpp"
-#include "Color.h"
-#include "Velocity.h"
-#include <SFML/Graphics/Color.hpp>
-#include <cmath>
-#include <istream>
+# define M_PI           3.14159265358979323846  /* pi */
 
 Ball::Ball() = default;
-
-/**
- * @brief Конструктор Ball
- * 
- * @param radius радиус шара
- * @param color цвет шара
- */
-Ball::Ball(double radius, const Color& color)
-{
-  r_ = radius;
-  cr_ = color;
-}
 
 /**
  * Задает скорость объекта
  * @param velocity новое значение скорости
  */
-void
-Ball::setVelocity(const Velocity& velocity)
-{
-  v_ = velocity;
+void Ball::setVelocity(const Velocity& velocity) {
+    _velocity = velocity;
 }
 
 /**
  * @return скорость объекта
  */
-Velocity
-Ball::getVelocity() const
-{
-  return v_;
+Velocity Ball::getVelocity() const {
+    return {_velocity};
 }
 
 /**
@@ -46,35 +26,23 @@ Ball::getVelocity() const
  * Рисование выполняется путем вызова painter.draw(...)
  * @param painter контекст отрисовки
  */
-void
-Ball::draw(Painter& painter) const
-{ 
-  painter.draw(c_, r_, cr_);
+void Ball::draw(Painter& painter) const {
+    painter.draw(_point, _radius, _color);
 }
 
 /**
  * Задает координаты центра объекта
  * @param center новый центр объекта
  */
-void
-Ball::setCenter(const Point& center)
-{
-  c_ = center;
-}
-
-void
-Ball::setCollidable(bool flag)
-{
-  isCol_ = flag;
+void Ball::setCenter(const Point& center) {
+    _point = center;
 }
 
 /**
  * @return центр объекта
  */
-Point
-Ball::getCenter() const
-{
-  return c_;
+Point Ball::getCenter() const {
+    return {_point};
 }
 
 /**
@@ -82,10 +50,8 @@ Ball::getCenter() const
  * @details обратите внимание, что метод setRadius()
  * не требуется
  */
-double
-Ball::getRadius() const
-{
-  return r_;
+double Ball::getRadius() const {
+    return {_radius};
 }
 
 /**
@@ -95,35 +61,6 @@ Ball::getRadius() const
  * плотностью. В этом случае масса в условных единицах
  * эквивалентна объему: PI * radius^3 * 4. / 3.
  */
-double
-Ball::getMass() const
-{
-  return m_;
-}
-
-bool
-Ball::isCollidable() const
-{
-  return isCol_;
-}
-
-std::istream&
-operator>>(std::istream& in, Ball& ball)
-{
-  double radius;
-  Color color;
-  Point center, velocity;
-  bool isCollidable;
-
-  in >> center >> velocity;
-  in >> color;
-  in >> radius;
-  in >> std::boolalpha >> isCollidable;
-
-  ball = Ball(radius, color);
-  ball.setVelocity(Velocity(velocity));
-  ball.setCenter(center);
-  ball.setCollidable(isCollidable);
-
-  return in;
+double Ball::getMass() const {
+    return {(M_PI * _radius * _radius * _radius) * (4. / 3)};
 }
