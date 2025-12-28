@@ -3,7 +3,7 @@ name: 'C++ CI'
 on:
   push:
     branches:
-      - lab3
+      - lab5
       - feature/github_actions
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          gh release create v2025.3.${{ github.run_number }} build/lab3-2025.3.${{ github.run_number }}-Linux.deb
+          gh release create v2025.5.${{ github.run_number }} build/lab3-2025.5.${{ github.run_number }}-Linux.deb
 
   build-windows:
     runs-on: windows-latest
@@ -42,11 +42,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Dowload and Configure vcpkg
-        run: |
-          git clone https://github.com/Microsoft/vcpkg.git
-          .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install boost-test --triplet x64-windows
+      # - name: Dowload and Configure vcpkg
+      #   run: |
+      #     git clone https://github.com/Microsoft/vcpkg.git
+      #     .\vcpkg\bootstrap-vcpkg.bat
+      #     .\vcpkg\vcpkg install boost-test --triplet x64-windows
 
 
       - name: Configure CMake
@@ -64,4 +64,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: cmd
         run: |
-          gh release upload v2025.3.${{ github.run_number }} build/lab3-2025.3.${{ github.run_number }}-win64.zip
+          gh release upload v2025.5.${{ github.run_number }} build/lab3-2025.5.${{ github.run_number }}-win64.zip
