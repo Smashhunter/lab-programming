@@ -1,2 +1,10 @@
-/build/
+.cache
+build
 .vscode
+assert_testing
+gtest_testing
+ctest_testing
+workspace.code-workspace
+bin
+*tests
+*.zip
