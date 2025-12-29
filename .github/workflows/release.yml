@@ -30,8 +30,7 @@ jobs:
 
       - name: Configure Cmake
         run: |
-          cmake -B build -S .
-          cmake build -DPATCH_VERSION=${{ github.run_number }}
+          cmake -B build -S . -DPATCH_VERSION_OVERRIDE=${{ github.run_number }}
 
       - name: Build
         run: |
@@ -44,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          gh release create v2025.5.${{ github.run_number }} build/physics-2025.5.${{ github.run_number }}-Linux.deb
+          gh release create v2025.5.${{ github.run_number }} bin/physics-2025.5.${{ github.run_number }}-Linux.deb
 
   build-windows:
     runs-on: windows-latest
@@ -67,7 +66,6 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-          # cmake --build build --target tests
           cmake --build build --target package --config Release
       
       - name: Upload Release Asset
@@ -75,4 +73,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: cmd
         run: |
-          gh release upload v2025.5.${{ github.run_number }} bin/physics-..${{ github.run_number }}-win64.zip
+          gh release upload v2025.5.${{ github.run_number }} bin/physics-2025.5.${{ github.run_number }}-win64.zip
