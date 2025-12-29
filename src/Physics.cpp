@@ -1,4 +1,6 @@
 #include "Physics.h"
+#include <cmath>
+# define M_PI           3.14159265358979323846  /* pi */
 
 double dot(const Point& lhs, const Point& rhs) {
     return lhs.x * rhs.x + lhs.y * rhs.y;
@@ -11,16 +13,18 @@ void Physics::setWorldBox(const Point& topLeft, const Point& bottomRight) {
     this->bottomRight = bottomRight;
 }
 
-void Physics::update(std::vector<Ball>& balls, const size_t ticks) const {
+void Physics::update(std::vector<Ball>& balls, std::vector<Dust>& dusts, const size_t ticks) const {
 
     for (size_t i = 0; i < ticks; ++i) {
         move(balls);
+        move(dusts);
         collideWithBox(balls);
-        collideBalls(balls);
+        collideBalls(balls, dusts);
+        updateDustLife(dusts);
     }
 }
 
-void Physics::collideBalls(std::vector<Ball>& balls) const {
+void Physics::collideBalls(std::vector<Ball>& balls, std::vector<Dust>& dusts) const {
     for (auto a = balls.begin(); a != balls.end(); ++a) {
         if(!a->isCollideable) continue;
         
@@ -33,7 +37,14 @@ void Physics::collideBalls(std::vector<Ball>& balls) const {
                 collisionDistance * collisionDistance;
 
             if (distanceBetweenCenters2 < collisionDistance2) {
-                processCollision(*a, *b, distanceBetweenCenters2);
+                Point collisionPoint = processCollision(*a, *b, distanceBetweenCenters2);
+                const int power = 500;
+                double radians72= 72 * (M_PI / 180.0);
+                dusts.push_back(Dust(Velocity(Point(power, 0)), collisionPoint, Color(1, 0.65f, 0)));
+                dusts.push_back(Dust(Velocity(Point(power * cos(radians72), power * sin(radians72))), collisionPoint, Color(1, 0.65f, 0)));
+                dusts.push_back(Dust(Velocity(Point(power * cos(radians72*2), power * sin(radians72*2))), collisionPoint, Color(1, 0.65f, 0)));
+                dusts.push_back(Dust(Velocity(Point(power * cos(radians72*3), power * sin(radians72*3))), collisionPoint, Color(1, 0.65f, 0)));
+                dusts.push_back(Dust(Velocity(Point(power * cos(radians72*4), power * sin(radians72*4))), collisionPoint, Color(1, 0.65f, 0)));
             }
         }
         
@@ -70,7 +81,17 @@ void Physics::move(std::vector<Ball>& balls) const {
     }
 }
 
-void Physics::processCollision(Ball& a, Ball& b,
+void
+Physics::move(std::vector<Dust>& dusts) const
+{
+  for (Dust& dust : dusts) {
+    Point newPos = dust.getCenter() + dust.getVelocity().vector() * timePerTick;
+    dust.setCenter(newPos);
+  }
+}
+
+
+Point Physics::processCollision(Ball& a, Ball& b,
                                double distanceBetweenCenters2) const {
     // нормированный вектор столкновения
     const Point normal =
@@ -87,4 +108,15 @@ void Physics::processCollision(Ball& a, Ball& b,
     // задаем новые скорости мячей после столкновения
     a.setVelocity(Velocity(aV - normal * p * a.getMass()));
     b.setVelocity(Velocity(bV + normal * p * b.getMass()));
+    return Point(a.getCenter().x + normal.x * a.getRadius(), a.getCenter().y + normal.y * a.getRadius());
+}
+
+void
+Physics::updateDustLife(std::vector<Dust>& dusts) const
+{
+  for(size_t i = 0; i < dusts.size(); ++i) {
+    dusts.at(i).updateLifetime();
+    if(dusts.at(i).getLifetime() >= dustMaxLifetime_)
+      dusts.erase(dusts.begin() + i);
+  }
 }
