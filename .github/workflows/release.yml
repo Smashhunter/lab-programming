@@ -13,10 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Prepare system
-        run:  |
-          sudo apt-get update -y && \
-          sudo apt-get upgrade
+      # - name: Prepare system
+      #   run:  |
+      #     sudo apt-get update -y && \
+      #     sudo apt-get upgrade
         
 
       - name: Configure Cmake
