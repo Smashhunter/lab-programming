@@ -1,5 +1,10 @@
-#include "draft.hpp"
+#include "controller.hpp"
 
-int main(){
-    hello_world();
+void onFiguredClicked();
+void onCreateDocument();
+void onImportDocument();
+void onExportDocument();
+
+int main()
+{
 }
