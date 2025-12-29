@@ -1,55 +1,43 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.18)
 
-set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
-set(PROJECT_VESRION 2025.3.${PATCH_VERSION})
+set(MAJOR_VERSION "2025")
+set(MINOR_VERSION "6")
+set(PATCH_VERSION "1")
 
-project(lab3 VERSION ${PROJECT_VESRION})
-
-#creating lib for our project
-file(GLOB LIB_SOURCES "src/lib/*.cpp")
-add_library(my_lib STATIC ${LIB_SOURCES})
-target_include_directories(my_lib PUBLIC 
-    ${CMAKE_SOURCE_DIR}/include)
-
-#configuring main to use our lib
-add_executable(main "src/main/main.cpp")
-target_include_directories(main PRIVATE 
-    ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(main PRIVATE my_lib)
-
-set_target_properties(main PROPERTIES
-    CXX_STANDARD 14
-    CXX_STANDARD_REQUIRED ON
+project(lab6 
+    VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}
 )
 
-#find_package(Boost 1.74 REQUIRED COMPONENTS unit_test_framework)
-
-
-if (MSVC)
-    target_compile_options(main PRIVATE
-        /W4
-    )
-else ()
-    target_compile_options(main PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
+if(DEFINED PATCH_VERSION_OVERRIDE)
+    set(PROJECT_VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION_OVERRIDE})
 endif()
 
-install(TARGETS main RUNTIME DESTINATION bin)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin)
+
+include_directories(include)
+file(GLOB SOURCES "src/*/*.cpp")
+
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+install(DIRECTORY data DESTINATION .)
+
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+set(CPACK_PACKAGE_CONTACT savelybur.work@gmail.com)
+set(CPACK_PACKAGE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 if (WIN32)
     set(CPACK_GENERATOR ZIP)
 else ()
     set(CPACK_GENERATOR DEB)
-endif ()
-
-set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-
-set(CPACK_PACKAGE_CONTACT savelybur.work@gmail.com)
-set(CPACK_PACKAGE_DESCRIPTION "Simple program that represents some data structures")
+endif()
 
 include(CPack)
-
-add_subdirectory(tests)

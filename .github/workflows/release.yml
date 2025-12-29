@@ -3,7 +3,7 @@ name: 'C++ CI'
 on:
   push:
     branches:
-      - lab3
+      - lab6
       - feature/github_actions
 
 jobs:
@@ -14,18 +14,19 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Prepare system
-        run: sudo apt-get update -y && sudo apt-get install libboost-test-dev -y
+        run:  |
+          sudo apt-get update -y && \
+          sudo apt-get upgrade
         
 
       - name: Configure Cmake
         run: |
-          cmake -B build -S .
-          cmake build -DPATCH_VERSION=${{ github.run_number }}
+          cmake -B build -S . -DPATCH_VERSION_OVERRIDE=${{ github.run_number }}
 
       - name: Build
         run: |
           cmake --build build
-          cmake --build build --target tests
+          # cmake --build build --target tests
           cmake --build build --target package --config Release
 
       - name: Upload Release Asset
@@ -33,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          gh release create v2025.3.${{ github.run_number }} build/lab3-2025.3.${{ github.run_number }}-Linux.deb
+          gh release create v2025.6.${{ github.run_number }} bin/physics-*-Linux.deb
 
   build-windows:
     runs-on: windows-latest
@@ -42,21 +43,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Dowload and Configure vcpkg
-        run: |
-          git clone https://github.com/Microsoft/vcpkg.git
-          .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install boost-test --triplet x64-windows
-
-
       - name: Configure CMake
         run: |
-          cmake -B build -S . -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake" -DPATCH_VERSION=${{ github.run_number }}
+          cmake -B build -S . -G "Visual Studio 17 2022" -A x64  -DPATCH_VERSION_OVERRIDE=${{ github.run_number }}
 
       - name: Build
         run: |
           cmake --build build
-          # cmake --build build --target tests
           cmake --build build --target package --config Release
       
       - name: Upload Release Asset
@@ -64,4 +57,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: cmd
         run: |
-          gh release upload v2025.3.${{ github.run_number }} build/lab3-2025.3.${{ github.run_number }}-win64.zip
+          gh release upload v2025.6.${{ github.run_number }} bin/physics-*-win64.zip
