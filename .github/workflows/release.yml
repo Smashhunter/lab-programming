@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          gh release create v2025.5.${{ github.run_number }} bin/physics-2025.5.${{ github.run_number }}-Linux.deb
+          gh release create v2025.5.${{ github.run_number }} bin/physics-*-Linux.deb
 
   build-windows:
     runs-on: windows-latest
@@ -73,4 +73,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: cmd
         run: |
-          gh release upload v2025.5.${{ github.run_number }} bin/physics-2025.5.${{ github.run_number }}-win64.zip
+          gh release upload v2025.5.${{ github.run_number }} bin/physics-*-win64.zip
