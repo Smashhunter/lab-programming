@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.18)
 
 set(MAJOR_VERSION "2025")
-set(MINOR_VERSION "6")
+set(MINOR_VERSION "7")
 set(PATCH_VERSION "1")
 
-project(lab6 
+project(lab7
     VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}
 )
 
