@@ -2,8 +2,8 @@
 #include <memory>
 
 template<
-    class T,
-    class Allocator = std::allocator<T>>
+    class T
+>
 class my_container
 {
 public:
@@ -31,7 +31,6 @@ public:
     // virtual my_container& operator =(const my_container&& other) = 0;
     virtual void push_back(const T& value) = 0;
     virtual void push_back(const T&& value) = 0;
-    virtual void print() = 0;
     virtual size_t size() = 0;
     virtual void erase(iterator pos) = 0;
     virtual void erase(iterator first, iterator last) = 0;
