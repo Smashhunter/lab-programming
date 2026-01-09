@@ -12,7 +12,7 @@
 template<
     class T, 
     class Allocator = std::allocator<T>>
-class my_vector : public my_container<T, Allocator>
+class my_vector
 {
 private:
     using AllocTraits = std::allocator_traits<Allocator>;
@@ -172,6 +172,7 @@ public:
     void insert(iterator it, const T& value);
     void insert(iterator it, T&& value);
     T& operator [](size_t index){
+        if (index < 0 && index >= size_) throw std::out_of_range("Used invalid index for vector");
         return data_[index];
     }
 
