@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
-set(PROJECT_VESRION 2025.3.${PATCH_VERSION})
+set(PROJECT_VESRION 2025.4.${PATCH_VERSION})
 
-project(lab3 VERSION ${PROJECT_VESRION})
+project(lab4 VERSION ${PROJECT_VESRION})
 
 #creating lib for our project
 # file(GLOB LIB_SOURCES "src/lib/*.cpp")

@@ -7,8 +7,6 @@
 #include <cstddef>
 #include <iostream>
 
-#include "my_container.hpp"
-
 template<
     class T, 
     class Allocator = std::allocator<T>>
