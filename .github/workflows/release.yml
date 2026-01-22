@@ -57,4 +57,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: cmd
         run: |
-          gh release upload v2025.3.${{ github.run_number }} build/*-win64.zip
+          gh release upload v2025.4.${{ github.run_number }} build/*-win64.zip
