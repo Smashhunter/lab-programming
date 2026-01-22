@@ -26,7 +26,7 @@ int main() {
 
     std::cout << "Test2:\n";
 
-    std::map<int, int, std::less<int>, SimpleBlockAllocator<std::pair<int,int>, 10u>> test2;
+    std::map<int, int, std::less<int>, SimpleBlockAllocator<std::pair<const int,int>, 10u>> test2;
     fact= 1;
     test2[0] = 1;
     for(int i = 1; i < 10; i++){
