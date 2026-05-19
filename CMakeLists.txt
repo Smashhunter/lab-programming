@@ -1,55 +1,29 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
+project(thi-lab3 VERSION 1.0.0 LANGUAGES CXX)
 
-set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
-set(PROJECT_VESRION 2025.3.${PATCH_VERSION})
+# Опции (опционально)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(lab3 VERSION ${PROJECT_VESRION})
+include(FetchContent)
+FetchContent_Declare(SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 3.1.0
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
+FetchContent_MakeAvailable(SFML)
 
-#creating lib for our project
+# Директории с заголовками
+set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Список исходников библиотеки
 file(GLOB LIB_SOURCES "src/lib/*.cpp")
-add_library(my_lib STATIC ${LIB_SOURCES})
-target_include_directories(my_lib PUBLIC 
-    ${CMAKE_SOURCE_DIR}/include)
 
-#configuring main to use our lib
-add_executable(main "src/main/main.cpp")
-target_include_directories(main PRIVATE 
-    ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(main PRIVATE my_lib)
+add_executable(myapp "src/main/main.cpp")
 
-set_target_properties(main PROPERTIES
-    CXX_STANDARD 14
-    CXX_STANDARD_REQUIRED ON
-)
+# Для приложения тоже нужны публичные заголовки библиотеки
+target_include_directories(myapp PRIVATE ${INCLUDE_DIR})
+target_link_libraries(myapp PRIVATE SFML::Graphics)
 
-#find_package(Boost 1.74 REQUIRED COMPONENTS unit_test_framework)
-
-
-if (MSVC)
-    target_compile_options(main PRIVATE
-        /W4
-    )
-else ()
-    target_compile_options(main PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
-endif()
-
-install(TARGETS main RUNTIME DESTINATION bin)
-
-if (WIN32)
-    set(CPACK_GENERATOR ZIP)
-else ()
-    set(CPACK_GENERATOR DEB)
-endif ()
-
-set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-
-set(CPACK_PACKAGE_CONTACT savelybur.work@gmail.com)
-set(CPACK_PACKAGE_DESCRIPTION "Simple program that represents some data structures")
-
-include(CPack)
-
-add_subdirectory(tests)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT myapp)
