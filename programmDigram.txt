@@ -1,0 +1,155 @@
+@startuml
+
+skinparam handwritten false
+skinparam monochrome false
+skinparam packageStyle rect
+skinparam shadowing true
+skinparam classAttributeIconSize 0
+skinparam responseMessageBelowArrow true
+skinparam dpi 300
+
+' Настройки цвета для слоев
+skinparam package {
+    BackgroundColor<<Presentation>> #EBF5FB
+    BorderColor<<Presentation>> #2E86C1
+    
+    BackgroundColor<<Domain>> #E8F8F5
+    BorderColor<<Domain>> #117A65
+    
+    BackgroundColor<<Factories>> #FEF9E7
+    BorderColor<<Factories>> #D4AC0D
+    
+    BackgroundColor<<DataSource>> #F5EEF8
+    BorderColor<<DataSource>> #7D3C98
+}
+
+package "Domain Layer" <<Domain>> {
+    class Track{
+        - name: string
+        - pathTo: string
+        - durationSec: int
+        + Track(name: string, pathTo: string, durationSec: int)
+        + getTitle(): string
+        + getPathTo(): string
+        + getDuration(): int
+    }
+    class Playlist{
+        - tracks: Track[]
+        + addTrack(track: Track): void
+        + removeTrack(index: int): void
+        + getTracks(): Track[]
+        + getTrackCount(): int
+        + getPlaylistDuration(): int
+    }
+    interface AudioEngine <<interface>>{
+        {abstract} play(filePath: string): void
+        {abstract} stop(): void
+        {abstract} pause(): void
+        {abstract} setVolume(volume: float): void
+        {abstract} isPlaying(): bool
+    }
+    class PlaybackQueue{
+        - playlist: Playlist
+        - currentTrackIndex: int
+        - audioEngine: AudioEngine
+        - isLooping: bool
+        + PlaybackQueue(engine: AudioEngine)
+        + setPlaylist(newPlaylist: Playlist): void
+        + playCurrent(): void 
+        + next() : void 
+        + previous(): void 
+        + stop(): void 
+        + toggleLoop(): void 
+        + getCurrentTrack(): Track
+        + getPlaylist(): Playlist
+
+
+    }
+    
+}
+
+package "Data & Infrastructure Layer" <<DataSource>> {
+    class SfmlAudioEngine<overrides virtual methods>{
+        - music: sf::Music
+        - isPlaying: bool
+    }
+    class TrackRepository{
+        - dataFolderPath: string
+        + TrackRepository(folderPath: string)
+        + loadTracks(): Playlist
+    }
+}
+
+package "Factory Layer" <<Factories>> {
+    class AudioFactory{
+        {abstract} createAudioEngine(): AudioEngine
+    }
+    class SfmlAudioEngineFactory<overrides virtual methods>{
+        createAudioEngine(): AudioEngine
+    }
+}
+
+package "Presentation Layer" <<Presentation>> {
+    
+    class TrackPrinter{
+        + printTrackInfo(trac: Track, isCurrent: bool): void
+    }
+    class PlaylistPrinter{
+        - trackPrinter: TrackPrinter
+        + printQueue(queue: PlaybackQueue): void
+    }
+    class ConsoleMenu{
+        - queue: PlaybackQueue
+        - playlistPrinter: PlaylistPrinter
+        + ConsoleMenu(playbackQueue: PlaybackQueue)
+        + display(): void
+        + handleInput(): void
+    }
+    class PlayerApplication{
+        - factory: AudioFactory
+        -engine: AudioEngine
+        - queue: PlaybackQueue
+        - repository: TrackRepository
+        - menu: ConsoleMenu
+        - isRunning: bool
+        + initialize(): void
+        + run(): void
+    }
+}
+
+package "SFML" {
+    class Music{
+        
+    }
+}
+
+AudioFactory <|-- SfmlAudioEngineFactory
+SfmlAudioEngineFactory --> SfmlAudioEngine : create
+SfmlAudioEngine ..|> AudioEngine 
+SfmlAudioEngine --> SFML
+
+PlaybackQueue --o Playlist
+Playlist -- "*" Track
+PlaybackQueue --> AudioEngine : controls playing via
+
+TrackRepository ..> Track : create
+TrackRepository ..> Playlist : fills
+
+skinparam groupInheritance 2
+
+PlayerApplication *-- ConsoleMenu
+PlayerApplication *-- PlaybackQueue
+PlayerApplication *-- AudioFactory
+PlayerApplication *-- TrackRepository
+
+ConsoleMenu ..> TrackPrinter : using
+ConsoleMenu ..> PlaylistPrinter : using
+ConsoleMenu --> PlaybackQueue : send user commands
+
+TrackPrinter ..> Track : print data 
+PlaylistPrinter ..> PlaybackQueue : show queue and tracks
+
+
+
+
+@enduml

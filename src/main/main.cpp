@@ -1,20 +1,13 @@
-#include <SFML/Graphics.hpp>
+#include "presentation/PlayerApplication.hpp"
+#include "factories/SfmlAudioEngineFactory.hpp"
+#include "data-source/TrackRepository.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
-	sf::RenderWindow window( sf::VideoMode( { 200, 200 } ), "SFML works!" );
-	sf::CircleShape shape( 100.f );
-	shape.setFillColor( sf::Color::Green );
+	SfmlAudioEngineFactory audioEngineFactory;
+	audioEngineFactory.createAudioEngine();
+	// TrackRepository trackRepository(argc > 1 ? argv[1] : "data");
 
-	while ( window.isOpen() )
-	{
-		while ( const std::optional event = window.pollEvent() )
-		{
-			if ( event->is<sf::Event::Closed>() )
-				window.close();
-		}
-		window.clear();
-		window.draw( shape );
-		window.display();
-	}
+	// PlayerApplication app(&audioEngineFactory, &trackRepository);
+	return 0;
 }

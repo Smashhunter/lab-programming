@@ -20,10 +20,11 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Список исходников библиотеки
 file(GLOB LIB_SOURCES "src/lib/*.cpp")
 
-add_executable(myapp "src/main/main.cpp")
+add_executable(mp3-player "src/main/main.cpp")
 
 # Для приложения тоже нужны публичные заголовки библиотеки
-target_include_directories(myapp PRIVATE ${INCLUDE_DIR})
-target_link_libraries(myapp PRIVATE SFML::Graphics)
+target_include_directories(mp3-player PRIVATE ${INCLUDE_DIR})
+target_link_libraries(mp3-player PRIVATE SFML::Audio)
+target_sources(mp3-player PRIVATE ${LIB_SOURCES})
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT myapp)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT mp3-player)
