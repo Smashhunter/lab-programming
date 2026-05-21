@@ -12,6 +12,5 @@ public:
     void addTrack(const Track& track);
     void removeTrack(int index);
     const std::vector<Track>& getTracks() const;
-    int getTotalDuration() const; // Total duration in seconds
     int getTrackCount() const;
 };

@@ -2,23 +2,23 @@
 
 void Playlist::addTrack(const Track &track)
 {
+    tracks.push_back(track);
 }
 
 void Playlist::removeTrack(int index)
 {
+    if (index >= 0 && index < tracks.size())
+    {
+        tracks.erase(tracks.begin() + index);
+    }
 }
 
 const std::vector<Track> &Playlist::getTracks() const
 {
-    // TODO: insert return statement here
-}
-
-int Playlist::getTotalDuration() const
-{
-    return 0;
+    return tracks;
 }
 
 int Playlist::getTrackCount() const
 {
-    return 0;
+    return tracks.size();
 }

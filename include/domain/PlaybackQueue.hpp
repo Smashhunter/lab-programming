@@ -5,7 +5,7 @@
 #include "domain/AudioEngine.hpp"
 #include "domain/Track.hpp"
 
-class PlaybackQueue
+class PlaybackQueue: public AudioEngineListener
 {
 private:
     Playlist playlist;
@@ -25,4 +25,7 @@ public:
     void seek(float position); // Position in seconds
     const Track* getCurrentTrack() const;
     const Playlist& getPlaylist() const;
+    void onTrackEnded() override;
+    void setVolume(float volume);
+    
 };

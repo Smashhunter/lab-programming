@@ -20,5 +20,4 @@ private:
 public:
     PlayerApplication(AudioFactory* factory, TrackRepository* repository);
     void run();
-    void shutdown();
 };
